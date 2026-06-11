@@ -6,7 +6,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-// Чтение файла build-passport.properties (для Задания 5)
 import java.util.Properties
 
 fun main() {
@@ -30,7 +29,6 @@ fun main() {
     val input = reader.readLine()
 
     if (input != null) {
-        // Использование Apache Commons Lang3
         val reversed = StringUtils.reverse(input)
         val capitalized = StringUtils.capitalize(input)
 

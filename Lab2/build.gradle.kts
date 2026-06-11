@@ -16,17 +16,13 @@ repositories {
 }
 
 dependencies {
-    // Стандартная библиотека Kotlin
     implementation(kotlin("stdlib"))
 
-    // Apache Commons Lang3 (проверьте актуальную версию на mvnrepository.com)
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
-    // Логирование (SLF4J + Logback)
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("ch.qos.logback:logback-classic:1.4.11")
 
-    // Тесты
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -39,7 +35,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-// Конфигурация для Shadow Jar (Задание 4)
 tasks.shadowJar {
     manifest {
         attributes(Pair("Main-Class", "org.example.Main"))
@@ -47,7 +42,6 @@ tasks.shadowJar {
     archiveClassifier.set("all")
 }
 
-// Задача для вывода информации (из примера в методичке)
 abstract class PrintInfoTask : DefaultTask() {
     @TaskAction
     fun print() {
@@ -64,7 +58,6 @@ tasks.register<PrintInfoTask>("printInfo") {
     description = "Выводит информацию о проекте"
 }
 
-// Задача генерации паспорта сборки (Задание 5)
 tasks.register("generateBuildPassport") {
     group = "Custom"
     description = "Генерирует файл build-passport.properties"
@@ -78,7 +71,6 @@ tasks.register("generateBuildPassport") {
         outputDir.get().asFile.mkdirs()
         val props = Properties()
 
-        // Переменные окружения
         props["build.user"] = System.getenv("USERNAME") ?: System.getenv("USER") ?: "unknown"
         props["build.os"] = System.getProperty("os.name")
         props["build.java.version"] = System.getProperty("java.version")
@@ -92,15 +84,12 @@ tasks.register("generateBuildPassport") {
     }
 }
 
-// Интеграция: задача processResources зависит от generateBuildPassport
 tasks.named("processResources") {
     dependsOn(tasks.named("generateBuildPassport"))
 }
 
 
-// --- ЗАДАНИЕ 7: Git Hash и Инкремент Версии ---
 
-// Функция для получения хеша коммита
 fun getGitHash(): String {
     return try {
         val process = Runtime.getRuntime().exec("git rev-parse --short HEAD")
@@ -110,7 +99,6 @@ fun getGitHash(): String {
     }
 }
 
-// Функция для чтения и инкремента версии
 fun incrementVersion(): String {
     val versionFile = file("version.txt")
     var version = 1
@@ -122,10 +110,8 @@ fun incrementVersion(): String {
     return version.toString()
 }
 
-// Обновляем версию проекта динамически
 version = "${incrementVersion()}-SNAPSHOT"
 
-// Модифицируем задачу generateBuildPassport
 tasks.named("generateBuildPassport") {
     doLast {
         val outputFile = layout.buildDirectory.dir("resources/main").map { it.file("build-passport.properties") }
@@ -133,7 +119,6 @@ tasks.named("generateBuildPassport") {
 
         props["build.user"] = System.getenv("USERNAME") ?: "unknown"
 
-        // Новые свойства из Задания 7
         props["build.git.hash"] = getGitHash()
         props["build.version"] = version.toString()
 
