@@ -8,13 +8,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ComponentScan(basePackages = "org.example")
 public class AppConfig {
-    // Здесь можно добавить дополнительные бины при необходимости
 
-    // Пример дополнительной конфигурации (опционально):
-    /*
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-    */
 }
